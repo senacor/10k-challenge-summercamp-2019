@@ -8,8 +8,8 @@ import java.util.List;
 import java.util.stream.Stream;
 
 @Repository
-public interface ProductsRepository extends CrudRepository<Product, Long> {
+public interface ProductsRepository extends CrudRepository<ProductModel, Long> {
 
 
-    Stream<Product> findAllById(Long id);
+    Stream<ProductModel> findAllById(Long id);
 }
