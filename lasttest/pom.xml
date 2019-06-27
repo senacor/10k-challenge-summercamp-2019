@@ -17,7 +17,7 @@
         <gatling.version>3.1.3</gatling.version>
         <gatling-plugin.version>3.0.2</gatling-plugin.version>
         <gatling.simulations.package>com.sencaor.tenkchallenge.simulations</gatling.simulations.package>
-        <gatling.simulation.name>ProductApiSimulation</gatling.simulation.name>
+        <gatling.simulation.name>ProductLifecylceSimulation</gatling.simulation.name>
     </properties>
 
     <dependencies>
