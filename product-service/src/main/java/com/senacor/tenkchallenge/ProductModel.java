@@ -19,7 +19,7 @@ public class ProductModel {
 
     @Id
     @SequenceGenerator(name = "product_sequence", sequenceName = "product_id_seq", allocationSize = 1)
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "product_sequence")
+    @GeneratedValue(strategy = GenerationType.AUTO, generator = "product_sequence")
     private Long id;
     private String name;
 
