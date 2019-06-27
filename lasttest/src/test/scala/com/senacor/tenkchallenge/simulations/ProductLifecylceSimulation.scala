@@ -4,6 +4,8 @@ import io.gatling.core.Predef._
 import io.gatling.http.Predef._
 import io.gatling.http.request.builder.HttpRequestBuilder.toActionBuilder
 
+import scala.util.Random
+
 class ProductLifecylceSimulation extends Simulation {
 
   before {
@@ -17,35 +19,24 @@ class ProductLifecylceSimulation extends Simulation {
   val theHttpProtocolBuilder = http
     .baseUrl("http://localhost:8080")
 
+  val feeder = Iterator.continually(Map("name" -> Random.alphanumeric.take(20).mkString))
+
   val theScenarioBuilder = scenario("Produkt Lifecycle")
+    .feed(feeder)
     .exec(
-      http("addProduct")
+      http("POST /products")
         .post("/products")
-        .header("Content-Type", "application/json")
-        .formParamMap(Map("id" -> 1, "name" -> "my-product-name"))
-    )
-    .exec(
-      http("getProductById")
-        .get("/products")
-        .queryParam("productId", 1)
-    )
-    .exec(
-      http("updateProductById")
-        .put("/products")
-        .queryParam("productId", 1)
-        .header("Content-Type", "application/json")
-        .formParam("name", "my-new-product-name")
-    )
-    .exec(
-      http("getProductById")
-        .get("/products")
-        .queryParam("productId", 1)
-    )
-    .exec(
-      http("deleteProduct")
-        .delete("/products")
-        .queryParam("productId", 1)
-    )
+        .body(StringBody("{\"name\": ${name}"))
+        .check(
+          jsonPath("$..id").findAll.saveAs("productId")
+        )
+    ).doIf("${productId.exists()}") {
+      exec(
+        http("DELETE /products")
+          .delete("/products")
+          .queryParam("productId", "${productId}")
+      )
+  }
 
   setUp(
     theScenarioBuilder.inject(atOnceUsers(1))
